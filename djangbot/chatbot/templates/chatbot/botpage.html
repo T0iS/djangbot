@@ -2,10 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Chatbot</title>
   </head>
   <body>
-      
+    Chat with the T_BOT now! 
     <textarea id="chat-log" cols="100" rows="20"></textarea><br />
     <input id="chat-message-input" type="text" size="100" /> {%csrf_token%}
     <br />
@@ -49,6 +49,7 @@
        messageInputDom.value = '';
     };
 
-
+    var textarea = document.getElementById('#chat-log');
+    textarea.scrollTop = textarea.scrollHeight;
   </script>
 </html>

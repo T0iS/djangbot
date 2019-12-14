@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "channels",
     "chatbot.apps.ChatbotConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -70,7 +69,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "djangbot.wsgi.application"
-ASGI_APPLICATION = "djangbot.routing.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

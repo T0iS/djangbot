@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.safestring import mark_safe
+from .models import Files
 import json
 import requests
 from subprocess import run, PIPE
@@ -20,25 +21,8 @@ def about(request):
     return HttpResponse("HEY")
 
 
-def room(request, room_name):
-    return render(
-        request,
-        "chatbot/bot.html",
-        {"room_name_json": mark_safe(json.dumps(room_name))},
-    )
-
-
-def chatbot(request):
-    print("data.text")
-    data = "data.text"
-
-    out = "huehuehuehehue"
-
-    return render(request, "chatbot/home.html", {"data": out})
-
-
 def rendering(request):
-    return render(request, "chatbot/test2.html", {})
+    return render(request, "chatbot/botpage.html", {})
 
 
 def bot(request):
@@ -60,15 +44,21 @@ def bot(request):
             nltk.download("punkt", quiet=True)
             nltk.download("wordnet", quiet=True)
 
-            article = Article(
-                "https://www.gamesradar.com/minus-10-social-credits-600-million-gamers-face-punishment-for-their-hobby-as-life-imitates-a-black-mirror-episode/"
-            )
-            article.download()
-            article.parse()
-            article.nlp()
-            corpus = article.text
 
-            text = corpus
+            articles = Files.objects.values('url')
+            text = ""
+            for art in articles:
+                article = Article (art['url'])
+                article.download()
+                article.parse()
+                article.nlp()
+                corpus = article.text
+                text += corpus
+                text +="\n\n"
+
+            
+
+            
             sent_tokens = nltk.sent_tokenize(text)
 
             remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
@@ -116,7 +106,7 @@ def bot(request):
 
                 if score == 0:
                     bot_response = (
-                        bot_response + "I apologize, I do not understand that."
+                        bot_response + "I apologize, I do not understand that.\n Try using /addarticle command and pass me a link so I can learn :-)"
                     )
                 else:
                     bot_response = bot_response + sent_tokens[idx]
@@ -143,6 +133,10 @@ def bot(request):
                     if greet(user_response) != None:
                         print("T_BOT: " + greet(user_response))
                         msg = "T_BOT: " + greet(user_response)
+                    elif "/addarticle" in user_response:
+                        user_response = user_response.strip("/addarticle ")
+                        newart = Files(url=user_response)
+                        newart.save()
                     else:
                         print("T_BOT: " + resp(user_response))
                         msg = "T_BOT: " + resp(user_response)
