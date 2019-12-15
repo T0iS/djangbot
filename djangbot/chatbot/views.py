@@ -18,7 +18,7 @@ def home(request):
 
 def about(request):
 
-    return HttpResponse("HEY")
+    return render(request, "chatbot/about.html", {})
 
 
 def rendering(request):

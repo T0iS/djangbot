@@ -38,7 +38,7 @@
       var csrftoken = '{{ csrf_token }}';
       var data = { "data": message, "csrfmiddlewaretoken": csrftoken };
       
-      document.querySelector('#chat-log').value += (message + '\n');
+      document.querySelector('#chat-log').value += ("ME: "+message + '\n');
      
       $.post(URL, data).then(function(response) { 
             console.log(response); 
